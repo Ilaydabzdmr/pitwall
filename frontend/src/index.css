@@ -1,0 +1,1639 @@
+/* ============================================================
+   Google Fonts Import
+   Inter → genel metin fontu (300/400/500/600/700/900 ağırlıkları)
+   Orbitron → F1 temalı başlık ve sayı fontu (400/700/900)
+   display=swap → font yüklenene kadar sistem fontunu göster,
+   yüklenince değiştir (layout shift'i minimuma indirir)
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Orbitron:wght@400;700;900&display=swap');
+
+/* ============================================================
+   CSS RESET
+   Tüm tarayıcılardaki varsayılan margin/padding farklarını sıfırla.
+   box-sizing: border-box → padding ve border, elementin
+   toplam genişliğine dahil edilir (hesaplama kolaylaşır)
+   ============================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   CSS CUSTOM PROPERTIES (Değişkenler)
+   Tüm renk ve cam efekti değerlerini tek yerden yönet.
+   --red        → F1 kırmızısı, marka rengi
+   --red-glow   → kırmızının şeffaf versiyonu, glow efektleri için
+   --dark/2/3   → arka plan katmanları (en koyu → biraz açık)
+   --card       → kart arka planı, çok hafif beyaz şeffaflık
+   --border     → kenarlık rengi, hafif beyaz şeffaflık
+   --text       → ana metin rengi (beyaz)
+   --text-muted → soluk metin rengi (gri-mor)
+   --glass      → cam efekti arka planı
+   ============================================================ */
+:root {
+  --red: #e10600;
+  --red-glow: rgba(225, 6, 0, 0.4);
+  --dark: #050508;
+  --dark2: #0d0d14;
+  --dark3: #12121c;
+  --card: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.08);
+  --text: #ffffff;
+  --text-muted: #888899;
+  --glass: rgba(255,255,255,0.05);
+}
+
+/* ============================================================
+   BODY — Temel Sayfa Stili
+   Inter fontu, koyu arka plan, beyaz metin.
+   min-height: 100vh → içerik az olsa bile tam ekranı kapla.
+   overflow-x: hidden → yatay kaymayı engelle.
+   ============================================================ */
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--dark);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   BODY ARKAPLAN OVERLAY
+   ::before pseudo-elementi ile body üzerine sabit bir
+   radial gradient katmanı ekle. İki ayrı kırmızı ışıma
+   noktası oluşturur (sol-orta ve sağ-üst).
+   position: fixed → scroll'a rağmen yerinde kalır.
+   pointer-events: none → tıklamaları engelleme.
+   z-index: 0 → içeriklerin altında kalır.
+   ============================================================ */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at 20% 50%, rgba(225,6,0,0.05) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 20%, rgba(225,6,0,0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================================
+   NAVBAR — Navigasyon Çubuğu
+   Sayfanın en üstünde sabit (sticky) kalır.
+   backdrop-filter: blur → arkasındaki içeriği bulanıklaştırır,
+   "cam" efekti verir. z-index: 1000 → her şeyin üstünde.
+   ============================================================ */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 64px;
+  background: rgba(5,5,8,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* ============================================================
+   NAVBAR ALT ÇİZGİ (Dekoratif)
+   ::after ile navbar'ın altına kırmızıdan şeffafa geçen
+   bir gradient çizgi ekler. Gerçek border değil, dekoratif.
+   ============================================================ */
+.navbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--red), transparent);
+}
+
+/* ============================================================
+   NAVBAR LOGO
+   Orbitron fontu, kırmızı renk, glow efekti.
+   letter-spacing: 2px → F1 teması için geniş harf aralığı.
+   ============================================================ */
+.navbar-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--red);
+  text-decoration: none;
+  letter-spacing: 2px;
+  text-shadow: 0 0 20px var(--red-glow);
+}
+
+/* ============================================================
+   NAVBAR LİNKLER — Konteyner
+   Linkleri yatayda hizalar, aralarında boşluk bırakır.
+   ============================================================ */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ============================================================
+   NAVBAR LİNKLER — Genel Link Stili
+   Soluk gri renk, hover'da beyaza döner ve cam efektli
+   arka plan alır. transition ile yumuşak geçiş.
+   ============================================================ */
+.navbar-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+}
+
+.navbar-links a:hover {
+  color: var(--text);
+  background: var(--glass);
+}
+
+/* ============================================================
+   NAVBAR — Giriş Yapılmış Kullanıcı Adı
+   Kırmızı renk ve kalın font ile diğer linklerden ayrışır.
+   !important: .navbar-links a'nın genel stilini override eder.
+   ============================================================ */
+.navbar-user {
+  color: var(--red) !important;
+  font-weight: 600 !important;
+}
+
+/* ============================================================
+   NAVBAR — Giriş Yap Butonu
+   Kırmızı kenarlıklı, şeffaf arka planlı outline buton.
+   ============================================================ */
+.btn-login {
+  border: 1px solid rgba(225,6,0,0.5) !important;
+  color: var(--red) !important;
+  border-radius: 8px !important;
+}
+
+.btn-login:hover {
+  background: rgba(225,6,0,0.1) !important;
+  border-color: var(--red) !important;
+}
+
+/* ============================================================
+   NAVBAR — Kayıt Ol Butonu
+   Dolu kırmızı arka plan, glow efekti ile dikkat çeker.
+   CTA (Call to Action) buton — en belirgin navbar elemanı.
+   ============================================================ */
+.btn-register {
+  background: var(--red) !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  box-shadow: 0 0 20px var(--red-glow);
+}
+
+.btn-register:hover {
+  background: #ff1a1a !important;
+  box-shadow: 0 0 30px var(--red-glow);
+}
+
+/* ============================================================
+   NAVBAR — Çıkış Butonu
+   Soluk kenarlıklı, hover'da kırmızıya döner.
+   Giriş yap/kayıt butonlarından daha az dikkat çeker — kasıtlı.
+   ============================================================ */
+.btn-logout {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.btn-logout:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+/* ============================================================
+   PAGE — Genel Sayfa Konteyneri
+   İçeriği ortalar, max genişlik belirler, kenar boşluğu verir.
+   z-index: 1 → body::before overlay'inin üstünde kalır.
+   ============================================================ */
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   PAGE H1 — Sayfa Başlıkları
+   Orbitron fontu, ikon ile yan yana hizalanmış.
+   ::after → başlığın sağına kırmızıdan şeffafa gradient
+   yatay çizgi ekler (görsel ayraç efekti).
+   ============================================================ */
+.page h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.page h1::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--red), transparent);
+  margin-left: 1rem;
+}
+
+/* ============================================================
+   LOADING — Yükleniyor Durumu
+   Sayfanın ortasında, soluk gri renkte gösterilir.
+   min-height: 50vh → ekranın yarısını kapla.
+   ============================================================ */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  font-size: 1rem;
+  color: var(--text-muted);
+  gap: 0.75rem;
+}
+
+/* ============================================================
+   EMPTY — Boş Durum Mesajı
+   Veri olmadığında gösterilir. Ortalanmış, soluk.
+   ============================================================ */
+.empty {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 3rem;
+  font-size: 0.9rem;
+}
+
+/* ============================================================
+   HERO — Ana Sayfa Büyük Banner
+   Ortalanmış, geniş padding, overflow:hidden → taşmayı kes.
+   ::before → arka planda devasa yarı şeffaf "F1" yazısı,
+   dekoratif arka plan elemanı. pointer-events: none → tıklanamaz.
+   ============================================================ */
+.hero {
+  text-align: center;
+  padding: 5rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: 'F1';
+  position: absolute;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20rem;
+  font-weight: 900;
+  color: rgba(225,6,0,0.03);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  letter-spacing: -10px;
+}
+
+/* ============================================================
+   HERO H1 — Ana Başlık
+   Gradient metin efekti: beyazdan kırmızıya geçiş.
+   -webkit-background-clip: text → gradient'i metin şekline kes.
+   -webkit-text-fill-color: transparent → metnin rengi şeffaf,
+   alttaki gradient görünür.
+   .page h1::after'ı devre dışı bırak (hero'da gereksiz).
+   ============================================================ */
+.hero h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 4rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #fff 0%, var(--red) 60%, #ff6644 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+  letter-spacing: 4px;
+  border: none;
+  padding: 0;
+  display: block;
+}
+
+.hero h1::after { display: none; }
+
+/* ============================================================
+   HERO ALT METİN
+   Soluk gri, okunabilir satır aralığı, max genişlik.
+   ============================================================ */
+.hero p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+}
+
+/* ============================================================
+   HERO BUTONLAR — Konteyner
+   Yatayda ortalanmış, sarılabilir (flex-wrap: wrap).
+   ============================================================ */
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   BTN-PRIMARY — Ana Aksiyon Butonu
+   Dolu kırmızı, glow efekti, hover'da yukarı kayar.
+   :disabled → devre dışıyken gri, tıklanamaz, kayma yok.
+   ============================================================ */
+.btn-primary {
+  background: var(--red);
+  color: #fff;
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+  box-shadow: 0 0 20px var(--red-glow);
+  letter-spacing: 0.5px;
+}
+
+.btn-primary:hover {
+  background: #ff1a1a;
+  box-shadow: 0 0 35px var(--red-glow);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  background: #333;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================================
+   BTN-SECONDARY — İkincil Buton
+   Şeffaf arka plan, ince kenarlık. Cam efekti var.
+   Ana butondan daha az dikkat çeker — hiyerarşi için.
+   ============================================================ */
+.btn-secondary {
+  background: transparent;
+  color: #fff;
+  padding: 0.75rem 2rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+  border-color: rgba(255,255,255,0.3);
+  background: var(--glass);
+}
+
+/* ============================================================
+   HOME GRİD — Ana Sayfa İki Sütunlu Layout
+   2 eşit sütun, boşluklu, ortalanmış, z-index: 1.
+   ============================================================ */
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   HOME SECTION — Ana Sayfa Kart Bölümleri
+   Cam efektli kart. Tüm bölüm kartları bu stili kullanır.
+   ============================================================ */
+.home-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+/* ============================================================
+   HOME SECTION H2 — Bölüm Başlıkları
+   Küçük, büyük harfli, geniş harf aralığı, kırmızı.
+   Orbitron fontu ile F1 temalı görünüm.
+   ============================================================ */
+.home-section h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--red);
+  margin-bottom: 1.25rem;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   SEE ALL — "Tümünü Gör" Linki
+   Sağa hizalanmış, kırmızı, küçük. Hover'da soluklaşır.
+   ============================================================ */
+.see-all {
+  display: block;
+  text-align: right;
+  color: var(--red);
+  text-decoration: none;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: opacity 0.2s;
+}
+
+.see-all:hover { opacity: 0.7; }
+
+/* ============================================================
+   RACE CARD — Yarış Kartı
+   Cam efektli, kenarlıklı, tıklanabilir kart.
+   ::before → solda gizli kırmızı dikey çizgi,
+   hover'da görünür ve kart sağa kayar (translateX).
+   ============================================================ */
+.race-card {
+  display: block;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.6rem;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Sol kenar kırmızı çizgi — başlangıçta gizli */
+.race-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--red);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+/* Hover'da: kırmızı kenarlık, hafif kırmızı arka plan, sağa kayma */
+.race-card:hover {
+  border-color: rgba(225,6,0,0.3);
+  background: rgba(225,6,0,0.05);
+  transform: translateX(4px);
+}
+
+/* Hover'da sol çizgi görünür */
+.race-card:hover::before { opacity: 1; }
+
+/* Tur numarası — küçük, büyük harfli, kırmızı */
+.race-round {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--red);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+
+/* Yarış adı — orta büyüklükte, kalın */
+.race-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+}
+
+/* Ülke ve pist adı — soluk gri */
+.race-country, .race-circuit {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 0.2rem;
+}
+
+/* Tarih — Orbitron fontu ile dijital görünüm */
+.race-date {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* ============================================================
+   RACE STATUS BADGE — Durum Etiketi
+   inline-block → içeriğe göre genişlik.
+   upcoming → sarı, live → kırmızı + yanıp söner, finished → yeşil.
+   ============================================================ */
+.race-status {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.7rem;
+  border-radius: 20px;
+  margin-top: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+/* Yaklaşan yarış — altın sarısı */
+.race-status.upcoming {
+  background: rgba(255,200,0,0.1);
+  color: #ffd700;
+  border: 1px solid rgba(255,200,0,0.2);
+}
+
+/* Canlı yarış — kırmızı + pulse animasyonu */
+.race-status.live {
+  background: rgba(225,6,0,0.15);
+  color: #ff4444;
+  border: 1px solid rgba(225,6,0,0.3);
+  animation: pulse 2s infinite;
+}
+
+/* Biten yarış — yeşil */
+.race-status.finished {
+  background: rgba(0,200,80,0.1);
+  color: #44ff88;
+  border: 1px solid rgba(0,200,80,0.2);
+}
+
+/* ============================================================
+   PULSE ANİMASYONU — Canlı Yarış İçin
+   Opaklık 1 → 0.6 → 1 döngüsü, "canlı" hissi verir.
+   ============================================================ */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ============================================================
+   RACES GRİD — Yarışlar Sayfası Grid Layout
+   auto-fill → boşluğa göre otomatik sütun sayısı.
+   minmax(300px, 1fr) → min 300px, max eşit dağılım.
+   ============================================================ */
+.races-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+/* Büyük kart varyantı — daha fazla iç boşluk */
+.race-card.big { padding: 1.5rem; }
+
+/* ============================================================
+   LB-ROW — Liderboard Satırı
+   flex ile sıra, puan, isim yan yana hizalanır.
+   .highlight → giriş yapan kullanıcının satırı öne çıkar.
+   ============================================================ */
+.lb-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.875rem 1.25rem;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+  transition: all 0.2s;
+}
+
+.lb-row:hover {
+  border-color: rgba(225,6,0,0.2);
+  background: rgba(225,6,0,0.03);
+}
+
+/* Aktif kullanıcının satırı — kırmızı kenarlık ve glow */
+.lb-row.highlight {
+  border-color: rgba(225,6,0,0.5);
+  background: rgba(225,6,0,0.08);
+  box-shadow: 0 0 15px rgba(225,6,0,0.1);
+}
+
+/* Sıra numarası — Orbitron, sabit genişlik */
+.lb-rank {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  min-width: 2.5rem;
+  color: var(--text-muted);
+}
+
+/* Kullanıcı adı — flex: 1 ile kalan alanı doldurur */
+.lb-name { flex: 1; font-weight: 500; }
+
+/* Puan — kırmızı, Orbitron, kalın */
+.lb-pts {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--red);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* Liderboard max genişlik */
+.leaderboard { max-width: 700px; }
+
+/* ============================================================
+   TABS — Sekme Navigasyonu
+   Sezon / Haftalık gibi görünümleri değiştirmek için.
+   Aktif sekme → kırmızı arka plan + glow.
+   ============================================================ */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  width: fit-content;
+}
+
+.tabs button {
+  padding: 0.5rem 1.5rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.tabs button.active {
+  background: var(--red);
+  color: #fff;
+  box-shadow: 0 0 15px var(--red-glow);
+}
+
+/* ============================================================
+   AUTH CONTAINER — Giriş/Kayıt Sayfa Sarmalayıcı
+   Tam ekran yükseklikte dikey ve yatay ortalama.
+   ============================================================ */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 85vh;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   AUTH CARD — Giriş/Kayıt Formu Kartı
+   Koyu arka plan, kırmızı kenarlık, yoğun glow efekti.
+   ::before → üstte kırmızı gradient çizgi (ince ışık şeridi).
+   ::after → arka planda hafif kırmızı radial gradient.
+   ============================================================ */
+.auth-card {
+  background: rgba(10,10,20,0.95);
+  border: 1px solid rgba(225,6,0,0.3);
+  border-radius: 24px;
+  padding: 3rem;
+  width: 100%;
+  max-width: 500px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 60px rgba(225,6,0,0.15), 0 25px 50px rgba(0,0,0,0.7);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Üst kırmızı ışık şeridi */
+.auth-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #e10600, transparent);
+}
+
+/* Arka plan kırmızı parıltı */
+.auth-card::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse at center, rgba(225,6,0,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Auth kart başlığı — Orbitron, ortalanmış, glow */
+.auth-card h2 {
+  font-family: 'Orbitron', sans-serif;
+  margin-bottom: 2.5rem;
+  font-size: 1.6rem;
+  text-align: center;
+  letter-spacing: 2px;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(225,6,0,0.5);
+}
+
+/* Form grubu — label + input sarmalayıcı */
+.form-group { margin-bottom: 1.5rem; }
+
+/* Form label — kırmızı, küçük, büyük harf, geniş harf aralığı */
+.form-group label {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: #e10600;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   FORM INPUT & SELECT
+   Şeffaf arka plan, kırmızı kenarlık (soluk).
+   Focus → parlak kırmızı kenarlık + glow efekti.
+   ============================================================ */
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(225,6,0,0.2);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s;
+  font-family: 'Inter', sans-serif;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #e10600;
+  background: rgba(225,6,0,0.05);
+  box-shadow: 0 0 0 3px rgba(225,6,0,0.15), 0 0 20px rgba(225,6,0,0.1);
+}
+
+/* Select dropdown arka planı — koyu tema uyumu */
+.form-group select option { background: #0a0a14; }
+
+/* Auth kart submit butonu — tam genişlik, Orbitron */
+.auth-card button[type="submit"] {
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 1rem;
+  font-size: 1rem;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(225,6,0,0.4);
+}
+
+/* Alt yönlendirme metni ("hesabın var mı?") */
+.auth-card p {
+  text-align: center;
+  margin-top: 1.75rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Auth içi linkler — kırmızı, glow */
+.auth-card a {
+  color: #e10600;
+  text-decoration: none;
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(225,6,0,0.4);
+}
+
+/* ============================================================
+   HATA MESAJI
+   Kırmızı arka plan, açık kırmızı metin, kenarlık ve glow.
+   Form validasyon hatalarında kullanılır.
+   ============================================================ */
+.error-msg {
+  background: rgba(225,6,0,0.1);
+  color: #ff6666;
+  border: 1px solid rgba(225,6,0,0.3);
+  padding: 0.875rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1.25rem;
+  font-size: 0.875rem;
+  box-shadow: 0 0 15px rgba(225,6,0,0.1);
+}
+
+/* ============================================================
+   BAŞARI MESAJI
+   Yeşil tema. Kayıt başarılı gibi olumlu durumlarda gösterilir.
+   ============================================================ */
+.success-msg {
+  background: rgba(0,200,80,0.1);
+  color: #44ff88;
+  border: 1px solid rgba(0,200,80,0.2);
+  padding: 1.25rem;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+/* ============================================================
+   DRIVERS GRİD — Sürücüler Sayfası
+   auto-fill → boşluğa göre otomatik sütun, min 240px.
+   ============================================================ */
+.drivers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+/* ============================================================
+   DRIVER CARD — Sürücü Kartı
+   Hover'da yukarı kalkar, kırmızı kenarlık ve glow alır.
+   ::after → arka planda büyük, yarı şeffaf sürücü kodu
+   (data-code attribute'undan okunur), dekoratif watermark.
+   ============================================================ */
+.driver-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Arka plan watermark — sürücü kodu (örn: "VER") */
+.driver-card::after {
+  content: attr(data-code);
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 5rem;
+  font-weight: 900;
+  color: rgba(255,255,255,0.03);
+  pointer-events: none;
+}
+
+.driver-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(225,6,0,0.3);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(225,6,0,0.1);
+}
+
+/* 3 harfli büyük sürücü kodu — Orbitron, kırmızı, glow */
+.driver-code {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--red);
+  text-shadow: 0 0 20px var(--red-glow);
+  letter-spacing: 2px;
+}
+
+.driver-name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0.4rem 0 0.2rem;
+}
+
+/* Takım adı — soluk, küçük */
+.driver-team {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+  font-weight: 500;
+}
+
+/* İstatistik satırları konteyneri */
+.driver-stats { display: flex; flex-direction: column; gap: 0.6rem; }
+
+/* Tek istatistik satırı — label + bar yan yana */
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* İstat etiketi — sabit genişlik, hizalama için */
+.stat > span:first-child { min-width: 40px; }
+
+/* İstatistik bar arka planı */
+.stat-bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+/* ============================================================
+   STAT FILL — İstatistik Bar Dolgu
+   Kırmızıdan turuncu gradient, glow efekti.
+   width JS tarafından dinamik set edilir.
+   transition → bar dolumu animasyonlu görünür.
+   ============================================================ */
+.stat-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--red), #ff6644);
+  border-radius: 2px;
+  transition: width 0.8s ease;
+  box-shadow: 0 0 8px var(--red-glow);
+}
+
+/* ============================================================
+   RACE HEADER — Yarış Detay Sayfası Başlık Kartı
+   Cam efekti, üstte kırmızı gradient çizgi.
+   ============================================================ */
+.race-header {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+/* Üst dekoratif kırmızı çizgi */
+.race-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--red), transparent);
+}
+
+/* Race header içindeki h1 — .page h1 stilini override et */
+.race-header h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.6rem;
+  border: none;
+  padding: 0;
+  margin-bottom: 0.5rem;
+}
+
+.race-header h1::after { display: none; }
+.race-header p { color: var(--text-muted); margin-bottom: 0.3rem; font-size: 0.9rem; }
+
+/* ============================================================
+   GAME BTN — Oyuna Giriş Butonu
+   Gradient kırmızı, hover'da büyür ve glow artar.
+   inline-flex ile ikon + metin hizalanır.
+   ============================================================ */
+.game-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, var(--red), #ff4400);
+  color: #fff;
+  padding: 0.875rem 2rem;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  transition: all 0.3s;
+  box-shadow: 0 0 25px var(--red-glow);
+  font-size: 0.95rem;
+}
+
+.game-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 40px var(--red-glow);
+}
+
+/* ============================================================
+   PREDICTION FORM — Tahmin Formu Kartı
+   Yarış detay sayfasındaki tahmin giriş alanı.
+   ============================================================ */
+.prediction-form {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem 2.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.prediction-form h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+}
+
+/* ============================================================
+   JOKER TOGGLE — Joker Kullanım Onay Kutusu
+   Altın sarısı tema — joker özel ve değerli hissi verir.
+   ============================================================ */
+.joker-toggle {
+  margin: 1.25rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #ffd700;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* Checkbox genişliği auto — label genişliğine uymasın */
+.joker-toggle input { width: auto; accent-color: #ffd700; }
+
+/* ============================================================
+   PROFİL HEADER
+   Avatar + kullanıcı bilgisi yan yana. Üstte kırmızı çizgi.
+   ml-auto ile çıkış butonu sağa itilir.
+   ============================================================ */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 2rem 2.5rem;
+  border-radius: 20px;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--red), transparent);
+}
+
+/* ============================================================
+   PROFİL AVATAR
+   Gradient daire, ortasında kullanıcı adı baş harfi.
+   flex-shrink: 0 → küçük ekranda ezilmez.
+   ============================================================ */
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, var(--red), #ff4400);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 0 25px var(--red-glow);
+}
+
+/* Profil h1 — .page h1 genel stilini sıfırla */
+.profile-header h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+  border: none;
+  padding: 0;
+}
+
+.profile-header h1::after { display: none; }
+.profile-header p { color: var(--text-muted); font-size: 0.875rem; }
+
+/* Toplam puan — altın sarısı, Orbitron */
+.total-points {
+  color: #ffd700 !important;
+  font-weight: 700;
+  margin-top: 0.4rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem !important;
+}
+
+/* Tehlike butonu (çıkış) — sağa itilmiş, kırmızı outline */
+.btn-danger {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid rgba(225,6,0,0.4);
+  color: var(--red);
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.btn-danger:hover {
+  background: rgba(225,6,0,0.1);
+  border-color: var(--red);
+}
+
+/* Tahmin geçmişi bölüm başlığı */
+.predictions-history h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  margin-bottom: 1.25rem;
+  color: var(--red);
+}
+
+/* ============================================================
+   PREDICTION ROW — Tahmin Geçmişi Satırı
+   Yarış adı, tahmin detayları ve puan yan yana sıralanır.
+   flex-wrap: wrap → dar ekranda alta kayar.
+   ============================================================ */
+.prediction-row {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  transition: all 0.2s;
+}
+
+.prediction-row:hover { border-color: rgba(225,6,0,0.2); }
+
+/* Yarış adı — kalın, sabit min genişlik */
+.pred-race { font-weight: 600; min-width: 180px; font-size: 0.9rem; }
+
+/* Tahmin detayları — soluk, küçük, flex ile dağılır */
+.pred-details {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  flex: 1;
+}
+
+/* Kazanılan puan — yeşil, Orbitron, sağa itilmiş */
+.pred-points {
+  color: #44ff88;
+  font-weight: 700;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  margin-left: auto;
+}
+
+/* ============================================================
+   GAME SELECT — Oyun Başlangıç Ekranı
+   Pist ve sürücü seçim arayüzü. Ortalanmış, geniş padding.
+   ============================================================ */
+.game-select {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Oyun başlığı — büyük, kırmızı, glow, geniş harf aralığı */
+.game-select h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--red);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 30px var(--red-glow);
+  letter-spacing: 3px;
+}
+
+/* İki sütunlu seçim grid'i — pist ve sürücü yan yana */
+.select-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 2rem 0;
+  text-align: left;
+}
+
+/* Seçim grid alt başlıkları — küçük, soluk, büyük harf */
+.select-grid h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   TRACK LIST & DRIVER LIST
+   Dikey liste, max yükseklik + scroll.
+   Özel kırmızı scrollbar (webkit).
+   ============================================================ */
+.track-list, .driver-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.track-list::-webkit-scrollbar,
+.driver-list::-webkit-scrollbar { width: 4px; }
+
+.track-list::-webkit-scrollbar-track { background: transparent; }
+
+/* Kırmızı scrollbar şeridi */
+.track-list::-webkit-scrollbar-thumb,
+.driver-list::-webkit-scrollbar-thumb {
+  background: var(--red);
+  border-radius: 2px;
+}
+
+/* ============================================================
+   TRACK BTN & DRIVER BTN — Seçim Butonları
+   Kart görünümlü, tıklanabilir.
+   .active → seçili durum, kırmızı kenarlık + glow.
+   ============================================================ */
+.track-btn, .driver-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.875rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.track-btn:hover, .driver-btn:hover {
+  border-color: rgba(225,6,0,0.4);
+  background: rgba(225,6,0,0.05);
+}
+
+/* Seçili durum */
+.track-btn.active, .driver-btn.active {
+  border-color: var(--red);
+  background: rgba(225,6,0,0.1);
+  box-shadow: 0 0 15px rgba(225,6,0,0.15);
+}
+
+/* Sürücü butonu — flex ile kod ve isim yan yana */
+.driver-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Sürücü kodu (VER, HAM vb.) — Orbitron, kırmızı */
+.driver-code-btn {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  min-width: 38px;
+  color: var(--red);
+}
+
+/* Oyunu başlat butonu — büyük, Orbitron */
+.start-btn {
+  font-size: 1.1rem;
+  padding: 1rem 3rem;
+  letter-spacing: 1px;
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* Kontrol ipuçları metni — soluk, küçük */
+.controls-hint {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 1rem;
+}
+
+/* ============================================================
+   IŞIKLAR EKRANI — Yarış Başlangıç Geri Sayımı
+   5 kırmızı ışık animasyonu. Tam ekran dikey ortalama.
+   Arka planda hafif kırmızı radial gradient.
+   ============================================================ */
+.lights-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 85vh;
+  gap: 3rem;
+  background: radial-gradient(ellipse at center, rgba(225,6,0,0.05) 0%, transparent 70%);
+}
+
+/* "HAZIR OL" yazısı — yanıp söner */
+.lights-screen h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 3px;
+  color: var(--text-muted);
+  animation: blink 1s infinite;
+}
+
+/* Yanıp sönme animasyonu */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Işıklar satırı — 5 ışık yan yana */
+.lights-row {
+  display: flex;
+  gap: 1.25rem;
+}
+
+/* ============================================================
+   LIGHT — Tek Işık
+   Daire şeklinde, başlangıçta kapalı (koyu gri).
+   .red → kırmızı ışık, yoğun glow efekti.
+   ============================================================ */
+.light {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.1);
+  transition: all 0.3s;
+  position: relative;
+}
+
+/* Yanık ışık — radial gradient + glow */
+.light.red {
+  background: radial-gradient(circle, #ff2200, #e10600);
+  border-color: #ff4444;
+  box-shadow: 0 0 30px #e10600, 0 0 60px rgba(225,6,0,0.5);
+}
+
+/* Kapalı ışık */
+.light.off { background: #1a1a1a; }
+
+/* ============================================================
+   LIGHTS OVERLAY — Geri Sayım Overlay
+   Işıkların üstüne çıkan metin kutusu (hazır ol, git vb.)
+   ============================================================ */
+.lights-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  background: rgba(0,0,0,0.9);
+  padding: 2.5rem 3rem;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+}
+
+/* ============================================================
+   GAME CANVAS WRAPPER — Oyun Ekranı Sarmalayıcı
+   Canvas'ı ortalar, HUD üstte, zaman bilgisi altta.
+   ============================================================ */
+.game-canvas-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  background: var(--dark);
+  min-height: 100vh;
+}
+
+/* HUD (Heads-Up Display) — hız, tur, süre göstergesi */
+.game-hud-top {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 0.6rem 2rem;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+}
+
+/* Canvas kenarlık ve glow — pist alanını çerçeveler */
+.game-canvas {
+  border: 1px solid rgba(225,6,0,0.4);
+  border-radius: 12px;
+  box-shadow: 0 0 40px rgba(225,6,0,0.15);
+}
+
+/* Tur süreleri — canvas altında, Orbitron */
+.lap-times {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1rem;
+  color: var(--text-muted);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.8rem;
+}
+
+/* ============================================================
+   GAME FINISHED — Oyun Bitti Ekranı
+   Sonuç kartı, kazanılan puan, yeniden oyna butonu.
+   ============================================================ */
+.game-finished {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem;
+  text-align: center;
+  min-height: 80vh;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Oyun bitti başlığı — .page h1 stilini sıfırla */
+.game-finished h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  border: none;
+  padding: 0;
+}
+
+.game-finished h1::after { display: none; }
+
+/* ============================================================
+   RESULTS — Oyun Sonuç Kartı
+   Tur süresi, bonuslar, toplam puan gösterilir.
+   ============================================================ */
+.results {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem 3rem;
+  margin-bottom: 2rem;
+  min-width: 350px;
+  backdrop-filter: blur(10px);
+}
+
+/* Sonuç satırı — label ve değer karşılıklı hizalanır */
+.results p {
+  margin-bottom: 0.875rem;
+  font-size: 1rem;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+/* Değer — beyaz, okunaklı */
+.results strong { color: var(--text); }
+
+/* Kazanılan puan satırı — büyük, altın sarısı, glow */
+.points-earned {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.4rem !important;
+  color: #ffd700 !important;
+  margin-top: 1.25rem !important;
+  justify-content: center !important;
+  text-shadow: 0 0 20px rgba(255,200,0,0.4);
+}
+
+/* ============================================================
+   LOGIN PROMPT & CLOSED MSG
+   Giriş yapılmamış veya tahmin kapalıysa gösterilen mesaj.
+   ============================================================ */
+.login-prompt, .closed-msg {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.login-prompt a { color: var(--red); text-decoration: none; }
+
+/* ============================================================
+   RACE RESULTS — Yarış Sonuçları Kartı
+   Yarış detay sayfasında kazanan, pole, DNF gösterilir.
+   ============================================================ */
+.race-results {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.race-results h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  margin-bottom: 1.25rem;
+  letter-spacing: 1px;
+}
+
+/* 3 sütunlu sonuç grid'i — kazanan, pole, en hızlı tur */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+/* Tek sonuç öğesi */
+.result-item {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Kazanan öğesi — altın sarısı tema */
+.result-item.winner {
+  border-color: rgba(255, 200, 0, 0.3);
+  background: rgba(255, 200, 0, 0.05);
+}
+
+/* Sonuç etiketi — küçük, soluk, büyük harf */
+.result-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Sonuç değeri (sürücü kodu) — Orbitron, büyük */
+.result-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Kazananın değeri — altın sarısı */
+.result-item.winner .result-value {
+  color: #ffd700;
+}
+
+/* DNF bölümü — alt kenarlıkla ayrılmış */
+.dnf-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+/* DNF rozetleri — yatayda sıralı */
+.dnf-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* ============================================================
+   DNF BADGE — DNF Sürücü Rozeti
+   Kırmızı tema, hap şeklinde, Orbitron.
+   Her DNF sürücüsü için ayrı rozet render edilir.
+   ============================================================ */
+.dnf-badge {
+  background: rgba(225,6,0,0.1);
+  border: 1px solid rgba(225,6,0,0.3);
+  color: #ff6666;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
